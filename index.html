@@ -3,34 +3,69 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>可達｜公共服務無障礙整改工作台</title><link rel="stylesheet" href="./style.css"></head>
 <body>
 <a class="skip" href="#main">跳到主要內容</a>
-<header class="top"><div class="container top-inner"><a href="./" class="brand" aria-label="可達首頁"><span class="symbol" aria-hidden="true">⇥</span> 可達 <span class="brand-sub">公共服務品質工作台</span></a><span class="top-tag"><span></span> 本機驗證 · 不外連</span></div></header>
-<main id="main" class="container">
-<section class="hero" aria-labelledby="hero-title">
- <div><span class="eyebrow"><i></i> 診斷／修正／複測</span><h1 id="hero-title">無障礙整改工作台<span>。</span></h1><p>把公共服務頁面的問題定位到實際元素，修改後立即複測；把仍需人工確認的事項，一併留在驗收證據中。</p></div>
- <div class="hero-aside"><strong>示範驗證環境</strong><span>內建合成頁面，不對外掃站。<br>單項通過不等於整站符合規範。</span></div>
-</section>
-<section class="controls" aria-label="待測情境與操作">
- <div><label for="fixture-select">測試情境</label><select id="fixture-select"><option value="status">案件進度查詢</option><option value="venue">場地使用申請</option></select></div>
- <div class="actions"><button id="scan" class="primary">重新掃描 DOM</button><button id="reset" class="secondary">重設合成情境</button></div>
-</section>
-<section class="metrics" aria-label="複測摘要">
- <article><span>01　初測發現</span><strong id="base-count">–</strong><small>以目前檢查範圍建立基線</small></article>
- <article class="issue"><span>02　最新仍有</span><strong id="open-count">–</strong><small>目前 DOM 的自動發現</small></article>
- <article class="done"><span>03　複測已排除</span><strong id="fixed-count">–</strong><small>同一基線、同一選擇器比對</small></article>
- <article><span>04　待人工覆核</span><strong id="manual-count">–</strong><small>與自動掃描獨立計算</small></article>
-</section>
-<nav class="views" aria-label="工作區"><button data-view="issues" aria-pressed="true">01　問題與整改</button><button data-view="evidence" aria-pressed="false">02　覆核與證據</button></nav>
-<p class="visually-hidden" id="announce" role="status"></p>
-<div id="issues" class="grid">
- <section class="panel"><div class="panel-head"><span class="eyebrow">REMEDIATION</span><h2>問題與整改</h2><p>每筆保留定位、判定依據及修正操作。</p></div><ul id="findings" class="findings"></ul></section>
- <aside class="side"><section class="panel fixture-panel"><div class="panel-head"><span id="fixture-tag" class="eyebrow"></span><h2>待測頁面</h2><p>真實 DOM 節點，缺陷刻意植入合成情境。</p></div><div id="fixture" class="fixture"></div></section>
- <section class="panel rules-panel"><div class="panel-head"><span class="eyebrow">CHECK SCOPE</span><h2>檢查範圍</h2><p>切換會自動重建初測基線與人工覆核。</p></div><fieldset id="rules"><legend class="visually-hidden">選取檢查項目</legend></fieldset></section></aside>
-</div>
-<div id="evidence" class="grid" hidden>
- <section class="panel"><div class="panel-head"><span class="eyebrow">MANUAL REVIEW</span><h2>人工覆核</h2><p>依操作結果記錄；自動檢查不替代此步。</p></div><div class="manual" id="manual"></div></section>
- <aside class="side"><section class="panel export-panel"><div class="panel-head"><span class="eyebrow">EVIDENCE PACKAGE</span><h2>下載複測證據</h2><p>JSON 包含初次與最新偵測、差異及人工狀態。僅輸出內建合成資料證據。</p></div><div class="export-body"><pre id="summary"></pre><button class="primary" id="export">下載證據 JSON</button></div></section></aside>
-</div>
-<footer><span>公共服務網站無障礙整改｜檢查與複測</span><span>合成測試頁｜自動檢查不取代人工覆核</span></footer>
+<header class="top">
+ <div class="container top-inner">
+  <a href="./" class="brand" aria-label="可達首頁"><strong class="symbol">可達</strong><span class="brand-sub">公共服務網站無障礙整改</span></a>
+ </div>
+</header>
+<main id="main" class="container" tabindex="-1">
+ <p class="hero-aside top-tag" data-contrast><strong class="phase">示範</strong> <span>只檢查內建合成頁，不連到外部網站。自動檢查不能代替人工覆核。</span></p>
+ <section class="hero" aria-labelledby="hero-title">
+  <h1 id="hero-title">無障礙整改工作台</h1>
+  <p data-contrast>先找出有問題的頁面元素，修正後重新檢查，再記錄需要人工確認的項目。</p>
+ </section>
+ <nav class="steps" aria-label="檢查步驟">
+  <ol>
+   <li><a href="#step-initial">1 初測</a></li>
+   <li><a href="#step-fix" data-step-view="issues">2 整改</a></li>
+   <li><a href="#step-retest">3 複測</a></li>
+   <li><a href="#step-manual" data-step-view="evidence">4 人工覆核</a></li>
+   <li><a href="#step-export" data-step-view="evidence">5 匯出證據</a></li>
+  </ol>
+ </nav>
+ <section class="controls section" aria-label="待測情境與操作">
+  <h2 id="step-initial" tabindex="-1">1　初測</h2>
+  <div class="scenario"><label for="fixture-select">測試情境</label><select id="fixture-select"><option value="status">案件進度查詢</option><option value="venue">場地使用申請</option></select></div>
+  <details class="rules-panel">
+   <summary>檢查範圍</summary>
+   <p class="small" data-contrast>更改檢查項目會重新初測，並清除這次的人工紀錄。</p>
+   <fieldset id="rules"><legend class="visually-hidden">選取檢查項目</legend></fieldset>
+  </details>
+  <div class="scan-summary" role="region" aria-label="複測摘要">
+   <p data-contrast>初測發現 <strong id="base-count">–</strong> 項，<span class="issue">目前 <strong id="open-count">–</strong> 項</span>，<span class="done">已排除 <strong id="fixed-count">–</strong> 項</span>；人工待覆核 <strong id="manual-count">–</strong> 項。</p>
+  </div>
+ </section>
+ <nav class="views" aria-label="工作區">
+  <button type="button" data-view="issues" aria-pressed="true" aria-controls="issues">01　問題與整改</button>
+  <button type="button" data-view="evidence" aria-pressed="false" aria-controls="evidence">02　覆核與證據</button>
+ </nav>
+ <p class="visually-hidden" id="announce" role="status" aria-live="polite"></p>
+ <div id="issues" class="grid">
+  <section class="panel section">
+   <div class="panel-head"><h2 id="step-fix" tabindex="-1">2　問題與整改</h2><p data-contrast>查看有問題的元素、判定原因與修正方式。</p></div>
+   <ul id="findings" class="findings"></ul>
+  </section>
+ </div>
+ <section class="panel section fixture-panel">
+   <div class="panel-head"><h2 id="step-retest" tabindex="-1">3　複測</h2><p data-contrast>修正時會自動重測。也可重新掃描目前的頁面元素，或重設後再試一次。</p></div>
+   <div class="actions"><button id="scan" class="primary">重新掃描 DOM</button><button id="reset" class="secondary">重設合成情境</button></div>
+   <details class="side" open>
+    <summary>待測頁面</summary>
+    <p class="small" data-contrast><span id="fixture-tag" class="eyebrow" aria-hidden="true"></span>此合成頁刻意保留待修正的缺陷。</p>
+    <div id="fixture" class="fixture"></div>
+   </details>
+ </section>
+ <div id="evidence" class="grid" hidden>
+  <section class="panel section">
+   <div class="panel-head"><h2 id="step-manual" tabindex="-1">4　人工覆核</h2><p data-contrast>請實際使用鍵盤與螢幕閱讀器，再填寫結果。重新掃描會清除先前的人工紀錄。</p></div>
+   <div class="manual" id="manual"></div>
+  </section>
+  <section class="panel section export-panel">
+   <div class="panel-head"><h2 id="step-export" tabindex="-1">5　匯出證據</h2><p data-contrast>下載初測、複測與人工覆核紀錄。不保存或輸出待測表單的輸入內容。</p></div>
+   <div class="export-body"><p id="summary" data-contrast></p><button class="primary" id="export">下載證據 JSON</button></div>
+  </section>
+ </div>
+ <footer><p data-contrast>公共服務網站無障礙整改｜自動結果僅涵蓋所選規則，不代表整頁合規。</p></footer>
 </main>
 <script type="module" src="./app.js"></script>
 </body>
