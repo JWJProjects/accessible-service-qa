@@ -1,0 +1,106 @@
+{
+  "schema": "service-a11y-evidence.v1",
+  "synthetic": true,
+  "scope": "built-in fixture only",
+  "fixture": {
+    "id": "status",
+    "label": "案件進度查詢"
+  },
+  "enabled": [
+    "A11Y-01",
+    "A11Y-02",
+    "A11Y-03",
+    "A11Y-04"
+  ],
+  "revision": 4,
+  "baseline": [
+    {
+      "id": "A11Y-01",
+      "criterion": "1.1.1",
+      "title": "圖片缺少替代文字",
+      "selector": "#service-illustration",
+      "observation": "未設定 alt 屬性",
+      "recommendation": "依內容提供合適的 alt；純裝飾才使用空 alt。"
+    },
+    {
+      "id": "A11Y-02",
+      "criterion": "3.3.2 / 4.1.2",
+      "title": "表單欄位缺少標籤",
+      "selector": "#request-field",
+      "observation": "無非空白的標籤或名稱",
+      "recommendation": "加入有意義的可見 label，並正確連結至欄位。"
+    },
+    {
+      "id": "A11Y-03",
+      "criterion": "4.1.2",
+      "title": "按鈕缺少名稱",
+      "selector": "#request-action",
+      "observation": "沒有可辨識的名稱來源",
+      "recommendation": "以可見文字或適當的 aria-label 說明按鈕用途。"
+    },
+    {
+      "id": "A11Y-04",
+      "criterion": "1.4.3",
+      "title": "一般文字對比不足",
+      "selector": "#service-note",
+      "observation": "2.25:1（預期 ≥ 4.50:1）",
+      "recommendation": "加深文字顏色或調整背景；修正後以計算樣式重測。"
+    }
+  ],
+  "latest": [],
+  "diff": {
+    "resolved": [
+      {
+        "id": "A11Y-01",
+        "criterion": "1.1.1",
+        "title": "圖片缺少替代文字",
+        "selector": "#service-illustration",
+        "observation": "未設定 alt 屬性",
+        "recommendation": "依內容提供合適的 alt；純裝飾才使用空 alt。"
+      },
+      {
+        "id": "A11Y-02",
+        "criterion": "3.3.2 / 4.1.2",
+        "title": "表單欄位缺少標籤",
+        "selector": "#request-field",
+        "observation": "無非空白的標籤或名稱",
+        "recommendation": "加入有意義的可見 label，並正確連結至欄位。"
+      },
+      {
+        "id": "A11Y-03",
+        "criterion": "4.1.2",
+        "title": "按鈕缺少名稱",
+        "selector": "#request-action",
+        "observation": "沒有可辨識的名稱來源",
+        "recommendation": "以可見文字或適當的 aria-label 說明按鈕用途。"
+      },
+      {
+        "id": "A11Y-04",
+        "criterion": "1.4.3",
+        "title": "一般文字對比不足",
+        "selector": "#service-note",
+        "observation": "2.25:1（預期 ≥ 4.50:1）",
+        "recommendation": "加深文字顏色或調整背景；修正後以計算樣式重測。"
+      }
+    ],
+    "remaining": [],
+    "newFindings": []
+  },
+  "manual": [
+    {
+      "id": "MAN-01",
+      "name": "鍵盤流程與焦點",
+      "criterion": "2.1.1 / 2.4.7",
+      "procedure": "只用 Tab、Shift+Tab 與 Enter 操作，記錄順序、可見焦點及可操作性。",
+      "status": "pending"
+    },
+    {
+      "id": "MAN-02",
+      "name": "螢幕閱讀器實測",
+      "criterion": "1.1.1 / 4.1.2",
+      "procedure": "使用螢幕閱讀器確認圖片資訊、欄位與按鈕名稱是否切合情境。",
+      "status": "pending"
+    }
+  ],
+  "certification": false
+}

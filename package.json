@@ -1,0 +1,1 @@
+{"name":"accessible-service-qa","private":true,"type":"module","scripts":{"test":"node --test"}}
