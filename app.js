@@ -45,15 +45,29 @@ function drawFindings(diff){
     const noScope=!state.enabled.length;
     box.append(el('h3',null,noScope?'目前未啟用自動檢查':'本次範圍未再發現問題'),el('p',null,noScope?'請至少選一個檢查項目，才可建立有效的自動基線。':'請完成鍵盤與螢幕閱讀器人工覆核，這並不代表整頁合規。'));list.append(box);
   }
-  for(const f of state.latest){
-    const item=el('li'), row=el('div','finding-row');
-    row.append(el('span','chip',f.id),el('strong',null,f.title));
-    const meta=el('div','finding-meta');meta.append(el('code',null,f.selector),document.createTextNode(`　｜ ${f.criterion}　｜ ${f.observation}`));
-    const action=el('div','fixline');const b=el('button','fix','套用修正');b.setAttribute('aria-label','套用修正：'+f.title);
-    b.onclick=()=>{applyFixtureFix(root,state.key,f.id);scan('已修改 DOM 並複測');(q('.fix')??q('#scan')).focus();};
-    action.append(el('span',null,f.recommendation),b);item.append(row,meta,action);list.append(item);
+  const findingRow=(f,resolved)=>{
+    const item=el('li','finding-item');
+    const row=el('div','finding-row');
+    const title=el('div','finding-title');
+    title.append(el('span','chip',f.id),el('strong',null,f.title));
+    const action=el('div','fixline');
+    if(!resolved){
+      const b=el('button','fix','套用修正');b.setAttribute('aria-label','套用修正：'+f.title);
+      b.onclick=()=>{applyFixtureFix(root,state.key,f.id);scan('已修改 DOM 並複測');(q('.fix')??q('#scan')).focus();};
+      action.append(b);
+    } else action.append(el('span','small','不需再修正'));
+    row.append(title,el('span',resolved?'status status-ok':'status status-bad',resolved?'已排除':'待修正'),action);
+    const details=el('details','finding-meta');
+    details.append(el('summary',null,resolved?'查看初測依據':'查看位置與判定原因'));
+    const observation=el('p');observation.append(el('code',null,f.selector),document.createTextNode(`　｜ ${f.criterion}　｜ ${f.observation}`));
+    details.append(observation,el('p',null,f.recommendation));item.append(row,details);return item;
+  };
+  for(const f of state.latest)list.append(findingRow(f,false));
+  if(diff.resolved.length){
+    const li=el('li','resolved');li.append(el('h3',null,'本次複測已排除'));
+    const ul=el('ul');for(const f of diff.resolved)ul.append(findingRow(f,true));
+    li.append(ul);list.append(li);
   }
-  if(diff.resolved.length){const li=el('li','resolved');li.append(el('strong',null,'本次複測已排除'));const ul=el('ul');for(const f of diff.resolved)ul.append(el('li',null,`${f.id} · ${f.title} · ${f.selector}`));li.append(ul);list.append(li);}
 }
 function drawManual(){
   const panel=q('#manual');panel.replaceChildren();
@@ -85,9 +99,22 @@ for(const c of checks){
   i.onchange=()=>{state.enabled=[...document.querySelectorAll('#rules input:checked')].map(x=>x.value);reset();announce('已改變檢查範圍並重建基線。');};
   l.append(i,document.createTextNode(' '+c.id+' '+c.title));q('#rules').append(l);
 }
-for(const b of document.querySelectorAll('[data-view]')) b.onclick=()=>{
+function showView(view){
   for(const n of document.querySelectorAll('[data-view]')){
-    const on=b===n;n.setAttribute('aria-pressed',String(on));q('#'+n.dataset.view).hidden=!on;
+    const on=n.dataset.view===view;n.setAttribute('aria-pressed',String(on));q('#'+n.dataset.view).hidden=!on;
   }
-};
+}
+for(const b of document.querySelectorAll('[data-view]')) b.onclick=()=>showView(b.dataset.view);
+function revealStep(hash, moveFocus=false){
+  const link=Array.from(document.querySelectorAll('.steps a')).find(a=>a.hash===hash);
+  if(!link)return;
+  if(link.dataset.stepView)showView(link.dataset.stepView);
+  const title=document.getElementById(hash.slice(1));
+  if(title&&moveFocus){title.focus();title.scrollIntoView({block:'start'});}
+}
+for(const link of document.querySelectorAll('.steps a')) link.addEventListener('click',()=>{
+  revealStep(link.hash,true);
+});
+window.addEventListener('hashchange',()=>revealStep(location.hash,true));
 reset();
+revealStep(location.hash,Boolean(location.hash));
